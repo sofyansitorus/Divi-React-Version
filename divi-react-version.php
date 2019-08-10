@@ -53,7 +53,7 @@ function divirv_is_divi_debug_mode() {
  * @return bool
  */
 function divirv_is_divi_extension_debug_mode() {
-	return class_exists( 'is_debugging_extension' ) && DiviExtensions::is_debugging_extension();
+	return class_exists( 'DiviExtensions' ) && method_exists( 'DiviExtensions', 'is_debugging_extension' ) && DiviExtensions::is_debugging_extension();
 }
 
 /**
