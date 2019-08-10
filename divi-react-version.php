@@ -137,7 +137,7 @@ if ( ! function_exists( 'divirv_admin_setting' ) ) :
 				'id'          => 'react_version',
 				'label'       => __( 'React Version', 'divirv' ),
 				'required'    => true,
-				'description' => __( 'Visit https://reactjs.org/versions for complete list of availabl version.', 'divirv' ),
+				'description' => __( 'Visit https://reactjs.org/versions for complete release history of React.', 'divirv' ),
 				'default'     => DIVI_REACT_VERSION,
 			)
 		);
