@@ -29,6 +29,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// Load the setting page library.
+require_once 'includes/class-wpyes.php';
+
 // Define the react version that will be used.
 if ( ! defined( 'DIVI_REACT_VERSION' ) ) {
 	define( 'DIVI_REACT_VERSION', '16.7.0' );
@@ -78,16 +81,68 @@ function divirv_is_debug_mode() {
  * @return string Filtered script loader source path.
  */
 function divirv_script_loader_src( $src, $handle ) {
+	$react_version = get_option( 'divirv_react_version', DIVI_REACT_VERSION );
+
 	// React source path.
 	if ( divirv_is_debug_mode() && 'react' === $handle ) {
-		return 'https://cdn.jsdelivr.net/npm/react@' . DIVI_REACT_VERSION . '/umd/react.development.js';
+		return 'https://cdn.jsdelivr.net/npm/react@' . $react_version . '/umd/react.development.js';
 	}
 
 	// React DOM source path.
 	if ( divirv_is_debug_mode() && 'react-dom' === $handle ) {
-		return 'https://cdn.jsdelivr.net/npm/react-dom@' . DIVI_REACT_VERSION . '/umd/react-dom.development.js';
+		return 'https://cdn.jsdelivr.net/npm/react-dom@' . $react_version . '/umd/react-dom.development.js';
 	}
 
 	return $src;
 }
 add_filter( 'script_loader_src', 'divirv_script_loader_src', 10, 2 );
+
+/**
+ * Load plugin textdomain.
+ *
+ * @since 1.0.0
+ */
+function divirv_load_textdomain() {
+	load_plugin_textdomain( 'divirv', false, basename( dirname( __FILE__ ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', 'divirv_load_textdomain' );
+
+if ( ! function_exists( 'divirv_admin_setting' ) ) :
+	/**
+	 * Create the admin setting page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	function divirv_admin_setting() {
+		// Bail early when not in debug mode.
+		if ( ! divirv_is_debug_mode() ) {
+			return;
+		}
+
+		$settings = new Wpyes(
+			'divirv_setting',
+			array(
+				'menu_title'  => __( 'React Version', 'divirv' ),
+				'page_title'  => __( 'Divi React Version', 'divirv' ),
+				'method'      => 'add_submenu_page',
+				'parent_slug' => 'et_divi_options',
+			),
+			'divirv'
+		);
+
+		$settings->add_field(
+			array(
+				'id'          => 'react_version',
+				'label'       => __( 'React Version', 'divirv' ),
+				'required'    => true,
+				'description' => __( 'Visit https://reactjs.org/versions for complete list of availabl version.', 'divirv' ),
+				'default'     => DIVI_REACT_VERSION,
+			)
+		);
+
+		$settings->init(); // Run the Wpyes class.
+	}
+endif;
+add_action( 'init', 'divirv_admin_setting' );
