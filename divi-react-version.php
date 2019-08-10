@@ -13,7 +13,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Divi React Version
- * Plugin URI:        https://github.com/sofyansitorus/divi-react-version
+ * Plugin URI:        https://github.com/sofyansitorus/Divi-React-Version
  * Description:       Set custom React version to bu used in Divi and Divi Extension.
  * Version:           1.0.0
  * Author:            Sofyan Sitorus
